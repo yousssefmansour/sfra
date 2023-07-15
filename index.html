@@ -7,7 +7,7 @@
     <title>شفرات</title>
 </head>
  <body style="direction: rtl;">
-    <select name="sfra" id="sfra"style="height: 50px; width: 80%;margin-bottom: 30px;font-size:30px;">
+    <select name="sfra" id="sfra"style="height: 50px; width: 80%;margin-bottom: 30px;font-size:30px;"onchange="myFunction()">
     <option value="1">شفره يسوع</option> 
     <option value="2">شفره ا</option> 
     <option value="3">شفره ي</option> 
@@ -15,7 +15,199 @@
     </select><br>
 <input type="text"style="height: 50px; width: 80%;margin-bottom: 20px;font-size:30px;" id="text" placeholder="اكتب هنا" onkeyup="tran();"><br>
 <button style="padding:10px 20px;font-size:30px; display: block;" id ='btn' >clear</button>
+<h1>ملحوظه اكتب كل الارقام بانجليزي</h1>
+<h1 id="note" style="display: none;">استخدم / كفصاله بين الكلمات</h1>
 <h1 id="output"></h1>
+<h1 style="display: inline;">مفتاح الشفره: </h1>
+<h1 style="display: inline;" id="key">ي1=أ</h1> 
 </body>
-<script src="y.js"></script>
+<script>
+    function tran(){
+let text1=document.getElementById("sfra").value;
+let text=document.getElementById("text").value;
+let out=document.getElementById('output');
+let output="";
+
+
+
+
+if(text1==4){
+output="";
+let sfra4=[[["ا","ب","ت"],["ث","ج",'ح'],['خ','د','ذ']]
+,[['ر','ز','س'],["ش",'ص','ض'],['ط','ظ','ع']],
+[["ف",'ق','ك'],['ل','م',"ن"],['ه','و','ي']]];
+for(i=0;i<text.length;){
+  if(text[i]==" "){
+  output+=" ";
+  out.innerText=output;
+  i++
+  }
+ else {
+ output+=sfra4[text[i]-1][text[i+1]-1][text[i+2]-1];
+ i=i+3;
+ out.innerText=output;
+}
+}
+}
+
+
+
+
+if(text1==2){
+   output="";
+   let sfra3=['ا','ب','ت','ث','ج','ح','خ','د'
+   ,'ذ','ر','ز','س','ش','ص','ض','ط','ظ'
+,'ع','غ','ف','ق','ك','ل','م','ن','ه'
+,'و','ي' 
+]
+sfra3=sfra3;
+text = text.trim();
+if(text.search(" ")==-1){
+output+=sfra3[text-1];
+out.innerText=output;
+}
+else{
+for(i=0;i<text.length;){
+   if(text[i]=="/"){
+      output+=" ";
+     i++}
+    else if(text[i]!=' ' && text[i+1]==" "){
+      output+=sfra3[text[i]-1];
+     i=i+2;
+   }
+else if(text[i]!=' ' && text[i+1]!=" " && (i-text.length!=-1)){
+output+=sfra3[text[i] + text[i+1]-1];
+  i=i+3;   
+}
+else if(i-text.length==-1){
+output+= sfra3[text[i]-1];
+i++;
+}
+else{
+i++;
+}
+out.innerText=output;
+}}
+}
+
+
+
+if(text1==3){
+    output="";
+    let sfra3=['ا','ب','ت','ث','ج','ح','خ','د'
+         ,'ذ','ر','ز','س','ش','ص','ض','ط','ظ'
+      ,'ع','غ','ف','ق','ك','ل','م','ن','ه'
+      ,'و','ي' 
+     ]
+ sfra3=sfra3.reverse();
+ text = text.trim();
+ if(text.search(" ")==-1){
+   output+=sfra3[text-1];
+   out.innerText=output;
+ }
+ else{
+    for(i=0;i<text.length;){
+      
+     if(text[i]=="/"){
+      output+=" ";
+     i++}
+    else if(text[i]!=' ' && text[i+1]==" "){
+      output+=sfra3[text[i]-1];
+     i=i+2;
+    }
+    else if(text[i]=="/"){
+    output+=" ";
+   i++
+    }
+    else if(text[i]!=' ' && text[i+1]!=" " && (i-text.length!=-1)){
+      output+=sfra3[text[i] + text[i+1]-1];
+        i=i+3;   
+    }
+    else if(i-text.length==-1){
+      output+= sfra3[text[i]-1];
+     i++;
+    }
+    else{
+    i++;
+    }
+    out.innerText=output;
+ }}
+}
+
+
+
+
+
+
+
+if(text1==1){
+ output="";
+ let a =['ا','ب','ت','ث','ج','ح','خ'];
+ let b =['د','ذ','ر','ز','س','ش','ص'];
+ let c =['ض','ط','ظ','ع','غ','ف','ق'];
+ let d =['ك','ل','م','ن','ه','و','ي'];
+ for(i=0;i<text.length;){
+ if(text[i]=='ي'){
+ output+=a[text[i+1]-1];
+ i=i+2
+  } 
+ else if(text[i]=='س'){
+    output+=b[text[i+1]-1];
+    i=i+2
+ }   
+ else if(text[i]=='و'){
+    output+=c[text[i+1]-1];
+    i=i+2
+ }   
+ else if(text[i]=='ع'){
+    output+=d[text[i+1]-1];
+    i=i+2;
+ } 
+ else if(text[i]==" "){
+ output+=" ";
+ i++;
+ }
+ else{
+   i++
+ }
+ out.innerText=output;
+ }
+ }
+}   
+
+
+
+
+
+document.getElementById("btn").onclick=function clear(){
+  document.getElementById("text").value=null;
+};
+
+
+
+
+
+function myFunction(){
+   let key=document.getElementById("key");
+   let note =document.getElementById("note");
+   let sfra=document.getElementById("sfra").value;
+   if(sfra==1){
+      note.style.display="none";
+      key.innerText="ي1=أ";
+   }
+   else if(sfra==2){
+      note.style.display="block";
+      key.innerText="أ=1";
+   }
+   else if(sfra==3){
+      note.style.display="block";
+      key.innerText='ي=1';
+   }
+   else if(sfra==4){
+      note.style.display="none";
+      key.innerText="333=ي";
+   }
+
+}
+</script>
 </html>
