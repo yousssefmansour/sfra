@@ -37,9 +37,10 @@
     <option value="2">شفره ا</option> 
     <option value="3">شفره ي</option> 
     <option value="4">شفره المثلثه</option> 
-    <option value="5">شفره المعكوسه</option> 
+    <option value="5">شفره ا ض</option> 
     <option value="6">شفره الخطوط</option> 
    <option value="7">شفره مورس</option> 
+   <option value="8">شفره المعكوسه</option> 
     </select><br>
 <input type="text"style="border-radius:8px; height: 50px; width: 80%;margin-bottom: 20px;font-size:30px;padding: 0 8px;outline:0;" id="text" placeholder="اكتب هنا" onkeyup="tran();"><br>
 <button style="padding:10px 20px;font-size:30px; display: inline;" id ='btn' >clear</button>
@@ -50,7 +51,7 @@
 <h3 style="display: inline;" id="key">ي1=أ</h3> 
 <h3 id="note" style="display: none;">استخدم / كفصاله بين الكلمات</h3>
 <h3>ملحوظه اكتب كل الارقام بانجليزي</h3>
- <div class="copy_right" style="position: fixed;bottom: 10px;right: 50%;  transform: translate(50%,0);font-size: 20px;"> <span style="font-size: 22px;font-family: 'Courier New', Courier, monospace;font-weight: 800;color: #cc4937;">Youssef</span></div> 
+<div class="copy_right" style="position: fixed;bottom: 10px;right: 50%;  transform: translate(50%,0);font-size: 20px;">  <span style="font-size: 22px;font-family: 'Courier New', Courier, monospace;font-weight: 800;color: #cc4937;">Youssef</span></div>
 </body>
 <script>
     function tran(){
@@ -282,7 +283,40 @@ if(text1==7){
    morse.onclick=function(){
       out.innerText=output;
 };
-}   
+}  
+if(text1==8){
+   let sfra5=['ا','ب','ت','ث','ج','ح','خ','د'
+   ,'ذ','ر','ز','س','ش','ص','ض','ط','ظ'
+,'ع','غ','ف','ق','ك','ل','م','ن','ه'
+,'و','ي' 
+]
+output="";
+for(i=0;i<text.length;i++){
+   if(sfra5.indexOf(text[i])==-1){
+     output+=text[i];
+   }
+   else{
+      if(sfra5.indexOf(text[i])>13){
+      output+=sfra5[27-sfra5.indexOf(text[i])];
+      }
+      else{
+         output+=sfra5[27-sfra5.indexOf(text[i])];
+      }
+   }
+   out.innerText=output;
+}
+
+}
+
+/*  let sat =["خ","ص","ق","ي"];
+ let sun =["د","ض","ك","ا"];
+ let mon =["ذ","ط","ل","ب"];
+ let tue =["ر","ظ","م","ت"];
+ let wed =["ز","ع","ن","ث"];
+ let thu =["س","غ","ه","ج"];
+ let fri =["ش","ف","و","ح"];
+
+ */
 }   
 
 
@@ -391,6 +425,13 @@ function myFunction(){
    note.style.display="none";
    key.innerText=".-=ا";
   }
+  else if(sfra==8){
+      sfra6.style.display="none";
+      note.style.display="none";
+      morse.style.display="none";
+      key.innerText="ي=أ";
+   }
+
 }
 </script>
 </html>
