@@ -29,6 +29,9 @@
          background-color:#00bf8e;
          border: 1px solid #00bf8e;
       }
+      .none{
+      display: none;
+      }
     </style>
 </head>
  <body style="direction: rtl;">
@@ -40,11 +43,20 @@
     <option value="5">شفره ا ض</option> 
     <option value="6">شفره الخطوط</option> 
    <option value="7">شفره مورس</option> 
-   <option value="8">شفره المعكوسه</option> 
+   <option value="8">شفره المعكوسه</option>   
+    <option value="9">شفره الايام</option> 
     </select><br>
 <input type="text"style="border-radius:8px; height: 50px; width: 80%;margin-bottom: 20px;font-size:30px;padding: 0 8px;outline:0;" id="text" placeholder="اكتب هنا" onkeyup="tran();"><br>
 <button style="padding:10px 20px;font-size:30px; display: inline;" id ='btn' >clear</button>
 <button style="padding:10px 20px;font-size:30px; display: none;" id ='morse' >ترجم</button>
+<button style="padding:10px 20px;font-size:30px;margin-bottom: 10px;"onclick="addtoinput('حد')"class="day" >حد</button>
+<button style="padding:10px 20px;font-size:30px;"onclick="addtoinput('اتنين')"class="day" >اتنين</button>
+<button style="padding:10px 10px;font-size:30px;"onclick="addtoinput('تلات')"class="day" >تلات</button>
+<button style="padding:10px 10px;font-size:30px;margin-bottom: 10px;"onclick="addtoinput('اربع')"class="day">اربع</button><br>
+<button style="padding:10px 10px;font-size:30px;"onclick="addtoinput('خميس')"class="day" >خميس</button>
+<button style="padding:10px 10px;font-size:30px;"onclick="addtoinput('جمعه')"class="day" >جمعه</button>
+<button style="padding:10px 10px;font-size:30px;"onclick="addtoinput('سبت')"class="day" >سبت</button>
+
 <h1 id="output" style="color:#00bf8e;"></h1>
 <h3 style="display: none;" id="sfra6" >اكتب عدد الخطوط اللي بعرض ثم بالطول</h2>
 <h3 style="display: inline;">مفتاح الشفره: </h3>
@@ -307,6 +319,11 @@ for(i=0;i<text.length;i++){
 }
 
 }
+if(text1==9){
+   output="";
+   output+=days_code(text);
+   out.innerText=output;
+};
 
 /*  let sat =["خ","ص","ق","ي"];
  let sun =["د","ض","ك","ا"];
@@ -329,10 +346,48 @@ for(i=0;i<text.length;i++){
 
 
 
-
 document.getElementById("btn").onclick=function clear(){
   document.getElementById("text").value=null;
+  let out=document.getElementById('output').innerText=null;
 };
+
+function days_code(day_code){
+ var ref ={
+   "حد4":"ا",
+   "اتنين4":"ب",
+   "تلات4":"ت",
+   "اربع4":"ث",
+   "خميس4":"ج",
+   "جمعه4":"ح",
+   "سبت1":"خ",
+   "حد1":"د",
+   "اتنين1":"ذ",
+   "تلات1":"ر",
+   "اربع1.":"ز",
+   "خميس1":"س",
+   "جمعه1":"ش",
+   "سبت2":"ص",
+   "حد2":"ض",
+   "اتنين2":"ط",
+   "تلات2":"ظ",
+   "اربع2":"ع",
+   "خميس2":"غ",
+   "جمعه2":"ف",
+   "سبت3":"ق",
+   "حد3":"ك",
+   "اتنين3":"ل",
+   "تلات3":"م",
+   "اربع3":"ن",
+   "خميس3":"ه",
+   "جمعه3":"و",
+   "سبت4":"ي"
+ }
+ return day_code.split('  ').map(
+   a => a .split(' ').map( 
+      b => ref[b]
+   ).join("")
+ ).join(" ");
+}
 
 
 
@@ -375,7 +430,17 @@ function decodemosre(morsecode){
 }
 console.log(decodemosre("-..."));
 
-
+function addtoinput(add_text){
+   let input=document.getElementById("text");
+   input.value+=add_text;
+}
+function remove_days_btn(){
+   let btn=document.getElementsByClassName("day");
+   for(i=0;i<btn.length;i++){
+      btn[i].classList+=" none";
+   }
+}
+remove_days_btn();
 function myFunction(){
    let key=document.getElementById("key");
    let note =document.getElementById("note");
@@ -387,31 +452,38 @@ function myFunction(){
       note.style.display="none";
       morse.style.display="none";
       key.innerText="ي1=أ";
+      remove_days_btn();
+
    }
    else if(sfra==2){
       morse.style.display="none";
       sfra6.style.display="none";
       note.style.display="block";
       key.innerText="أ=1";
+      remove_days_btn();
    }
    else if(sfra==3){
       morse.style.display="none";
-
       sfra6.style.display="none";
       note.style.display="block";
       key.innerText='ي=1';
+      remove_days_btn();
+
    }
    else if(sfra==4){
       morse.style.display="none";
       sfra6.style.display="none";
       note.style.display="none";
       key.innerText="333=ي";
+      remove_days_btn();
+
    }
    else if(sfra==5){
       morse.style.display="none";
       sfra6.style.display="none";
       note.style.display="none";
       key.innerText="ا=ض";
+      remove_days_btn();
    }
    else if(sfra==6){
       morse.style.display="none";
@@ -424,14 +496,37 @@ function myFunction(){
    sfra6.style.display="none";
    note.style.display="none";
    key.innerText=".-=ا";
+   remove_days_btn();
   }
   else if(sfra==8){
       sfra6.style.display="none";
       note.style.display="none";
       morse.style.display="none";
       key.innerText="ي=أ";
-   }
+      remove_days_btn();
 
+   }
+   else if(sfra==8){
+      sfra6.style.display="none";
+      note.style.display="none";
+      morse.style.display="none";
+      key.innerText="ي=أ";
+      remove_days_btn();
+
+   }
+   else if(sfra==9){
+      sfra6.style.display="none";
+      note.style.display="none";
+      morse.style.display="none";
+      key.innerText='حد4=أ';
+   function add_days_btn(){
+   let btn=document.getElementsByClassName("day");
+   for(i=0;i<btn.length;i++){
+      btn[i].classList="day";
+   }
+   }
+   add_days_btn();
+   }
 }
 </script>
 </html>
