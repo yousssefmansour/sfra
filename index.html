@@ -2,531 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شفرات</title>
+    <title>Text Scanner</title>
     <style>
-      body{
-         background-color: #2e3267;
-         color: rgb(255, 255, 255);
-         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      }
-      select{
-         border-radius: 5px;
-         outline: 0;
-         padding:0px 7px;
-      }
-      button{
-      outline: none;
-      border-radius: 10px;
-      background-color: #f75842;
-      color: white;
-      border: 1px solid #f75842;
-      transition: 0.5s ease;
-      margin-left:10px;
-      }
-      button:hover{
-         background-color:#00bf8e;
-         border: 1px solid #00bf8e;
-      }
-      .none{
-      display: none;
-      }
+        #video {
+            width: 100%;
+        }
+        #canvas {
+            display: none;
+        }
     </style>
 </head>
- <body style="direction: rtl;">
-    <select name="sfra" id="sfra"style="height: 50px; width: 80%;margin-bottom: 30px;font-size:30px;color:black;"onchange="myFunction()">
-    <option value="1">شفره يسوع</option> 
-    <option value="2">شفره ا</option> 
-    <option value="3">شفره ي</option> 
-    <option value="4">شفره المثلثه</option> 
-    <option value="5">شفره ا ض</option> 
-    <option value="6">شفره الخطوط</option> 
-   <option value="7">شفره مورس</option> 
-   <option value="8">شفره المعكوسه</option>   
-    <option value="9">شفره الايام</option> 
-    </select><br>
-<input type="text"style="border-radius:8px; height: 50px; width: 80%;margin-bottom: 20px;font-size:30px;padding: 0 8px;outline:0;" id="text" placeholder="اكتب هنا" onkeyup="tran();"><br>
-<button style="padding:10px 20px;font-size:30px; display: inline;" id ='btn' >clear</button>
-<button style="padding:10px 20px;font-size:30px; display: none;" id ='morse' >ترجم</button>
-<button style="padding:5px 8px;font-size:20px;margin-bottom: 10px;"onclick="addtoinput('حد')"class="day" >حد</button>
-<button style="padding:5px 8px;font-size:20px;"onclick="addtoinput('اتنين')"class="day" >اتنين</button>
-<button style="padding:5px 8px;font-size:20px;"onclick="addtoinput('تلات')"class="day" >تلات</button>
-<button style="padding:5px 8px;font-size:20px;margin-bottom: 10px;"onclick="addtoinput('اربع')"class="day">اربع</button><br>
-<button style="padding:5px 8px;font-size:20px;"onclick="addtoinput('خميس')"class="day" >خميس</button>
-<button style="padding:5px 8px;font-size:20px;"onclick="addtoinput('جمعه')"class="day" >جمعه</button>
-<button style="padding:5px 8px;font-size:20px;"onclick="addtoinput('سبت')"class="day" >سبت</button>
-<h1 id="output" style="color:#00bf8e;"></h1>
-<h3 style="display: none;" id="sfra6" >اكتب عدد الخطوط اللي بعرض ثم بالطول</h2>
-<h3 style="display: inline;">مفتاح الشفره: </h3>
-<h3 style="display: inline;" id="key">ي1=أ</h3> 
-<h3 id="note" style="display: none;">استخدم / كفصاله بين الكلمات</h3>
-<h3>ملحوظه اكتب كل الارقام بانجليزي</h3>
-<div class="copy_right" style="position: fixed;bottom: 10px;right: 50%;  transform: translate(50%,0);font-size: 20px;">  <span style="font-size: 22px;font-family: 'Courier New', Courier, monospace;font-weight: 800;color: #cc4937;">Youssef</span></div>
-<img src="https://t.bkit.co/w_64f9c55b4d267.gif" />
- </body>
-<script>
-    function tran(){
-let text1=document.getElementById("sfra").value;
-let text=document.getElementById("text").value;
-let out=document.getElementById('output');
-let morse=document.getElementById("morse");
-let output="";
+<body>
+    <video id="video" playsinline autoplay></video>
+    <canvas id="canvas"></canvas>
 
+    <script src="script.js">
+      navigator.mediaDevices.getUserMedia({ video: true })
+    .then(function(stream) {
+        var video = document.getElementById('video');
+        video.srcObject = stream;
+        video.onloadedmetadata = function(e) {
+            video.play();
+        };
+    })
+    .catch(function(err) {
+        console.log("An error occurred: " + err);
+    });
 
+// Capture frame from video and process
+var video = document.getElementById('video');
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
 
+video.addEventListener('play', function() {
+    var $this = this; // Cache the this
+    (function loop() {
+        if (!$this.paused && !$this.ended) {
+            context.drawImage($this, 0, 0, canvas.width, canvas.height);
+            // Extract text from the captured frame (you would need to integrate with OCR library or API)
+            // For example, using Tesseract.js:
+            Tesseract.recognize(canvas)
+                .then(function(result) {
+                    console.log(result.text); // Output recognized text
+                })
+                .catch(function(err) {
+                    console.error('Error:', err);
+                });
+            setTimeout(loop, 1000 / 30); // Adjust the delay based on the frame rate
+        }
+    })();
+}, 0);
 
-if(text1==4){
-output="";
-let sfra4=[[["ا","ب","ت"],["ث","ج",'ح'],['خ','د','ذ']]
-,[['ر','ز','س'],["ش",'ص','ض'],['ط','ظ','ع']],
-[["ف",'ق','ك'],['ل','م',"ن"],['ه','و','ي']]];
-for(i=0;i<text.length;){
-  if(text[i]==" "){
-  output+=" ";
-  out.innerText=output;
-  i++
-  }
- else {
- output+=sfra4[text[i]-1][text[i+1]-1][text[i+2]-1];
- i=i+3;
- out.innerText=output;
-}
-}
-}
-
-
-
-
-if(text1==2){
-   output="";
-   let sfra3=['ا','ب','ت','ث','ج','ح','خ','د'
-   ,'ذ','ر','ز','س','ش','ص','ض','ط','ظ'
-,'ع','غ','ف','ق','ك','ل','م','ن','ه'
-,'و','ي' 
-]
-sfra3=sfra3;
-text = text.trim();
-if(text.search(" ")==-1){
-output+=sfra3[text-1];
-out.innerText=output;
-}
-else{
-for(i=0;i<text.length;){
-   if(text[i]=="/"){
-      output+=" ";
-     i++}
-    else if(text[i]!=' ' && text[i+1]==" "){
-      output+=sfra3[text[i]-1];
-     i=i+2;
-   }
-else if(text[i]!=' ' && text[i+1]!=" " && (i-text.length!=-1)){
-output+=sfra3[text[i] + text[i+1]-1];
-  i=i+3;   
-}
-else if(i-text.length==-1){
-output+= sfra3[text[i]-1];
-i++;
-}
-else{
-i++;
-}
-out.innerText=output;
-}}
-}
-
-
-
-if(text1==3){
-    output="";
-    let sfra3=['ا','ب','ت','ث','ج','ح','خ','د'
-         ,'ذ','ر','ز','س','ش','ص','ض','ط','ظ'
-      ,'ع','غ','ف','ق','ك','ل','م','ن','ه'
-      ,'و','ي' 
-     ]
- sfra3=sfra3.reverse();
- text = text.trim();
- if(text.search(" ")==-1){
-   output+=sfra3[text-1];
-   out.innerText=output;
- }
- else{
-    for(i=0;i<text.length;){
-      
-     if(text[i]=="/"){
-      output+=" ";
-     i++}
-    else if(text[i]!=' ' && text[i+1]==" "){
-      output+=sfra3[text[i]-1];
-     i=i+2;
-    }
-    else if(text[i]=="/"){
-    output+=" ";
-   i++
-    }
-    else if(text[i]!=' ' && text[i+1]!=" " && (i-text.length!=-1)){
-      output+=sfra3[text[i] + text[i+1]-1];
-        i=i+3;   
-    }
-    else if(i-text.length==-1){
-      output+= sfra3[text[i]-1];
-     i++;
-    }
-    else{
-    i++;
-    }
-    out.innerText=output;
- }}
-}
-
-
-
-
-
-
-
-if(text1==1){
- output="";
- let a =['ا','ب','ت','ث','ج','ح','خ'];
- let b =['د','ذ','ر','ز','س','ش','ص'];
- let c =['ض','ط','ظ','ع','غ','ف','ق'];
- let d =['ك','ل','م','ن','ه','و','ي'];
- for(i=0;i<text.length;){
- if(text[i]=='ي'){
- output+=a[text[i+1]-1];
- i=i+2
-  } 
- else if(text[i]=='س'){
-    output+=b[text[i+1]-1];
-    i=i+2
- }   
- else if(text[i]=='و'){
-    output+=c[text[i+1]-1];
-    i=i+2
- }   
- else if(text[i]=='ع'){
-    output+=d[text[i+1]-1];
-    i=i+2;
- } 
- else if(text[i]==" "){
- output+=" ";
- i++;
- }
- else{
-   i++
- }
- out.innerText=output;
- }
- }
-
-
-
-
-
-
- if(text1==5){
-   let sfra5=['ا','ب','ت','ث','ج','ح','خ','د'
-   ,'ذ','ر','ز','س','ش','ص','ض','ط','ظ'
-,'ع','غ','ف','ق','ك','ل','م','ن','ه'
-,'و','ي' 
-]
-output="";
-for(i=0;i<text.length;i++){
-   if(sfra5.indexOf(text[i])==-1){
-     output+=text[i];
-   }
-   else{
-      if(sfra5.indexOf(text[i])>13){
-      output+=sfra5[sfra5.indexOf(text[i])-14];
-      }
-      else{
-         output+=sfra5[sfra5.indexOf(text[i])+14];
-      }
-   }
-   out.innerText=output;
-}
-
-}
-
-if(text1==6){
-   output="";
- for(i=0;i<text.length;){
-   if(text[i]==" "){
-      output+=" ";
-      i++;
-    }
-    if(text[i]=="1"){
-    let a=["ا","ب","ت","ث","ج","ح"];
-    output+=a[text[i+1]];
-    i=i+2;
-    }
-    else if(text[i]=="2"){
-   let b=["خ","د","ذ","ر","ز","س"];
-   output+=b[text[i+1]];
-    i=i+2;
-    }
-    else if(text[i]=="3"){
-   let c=["ش","ص","ض","ط","ظ","ع"]; 
-   output+=c[text[i+1]];
-    i=i+2;
-    }
-    else if(text[i]=="4"){
-    let d=["غ","ف","ق","ك","ل","م"]; 
-    output+=d[text[i+1]];
-    i=i+2;
-    }
-    else if(text[i]=="5"){
-    let f=["ن","ه","و","ي"]; 
-    output+=f[text[i+1]];
-    i=i+2;
-    }
-    else{
-      i++;
-    }
-    out.innerText=output;
-}
-}
-
-
-
-if(text1==7){
-   output="";
-   output+=decodemosre(text);
-   morse.onclick=function(){
-      out.innerText=output;
-};
-}  
-if(text1==8){
-   let sfra5=['ا','ب','ت','ث','ج','ح','خ','د'
-   ,'ذ','ر','ز','س','ش','ص','ض','ط','ظ'
-,'ع','غ','ف','ق','ك','ل','م','ن','ه'
-,'و','ي' 
-]
-output="";
-for(i=0;i<text.length;i++){
-   if(sfra5.indexOf(text[i])==-1){
-     output+=text[i];
-   }
-   else{
-      if(sfra5.indexOf(text[i])>13){
-      output+=sfra5[27-sfra5.indexOf(text[i])];
-      }
-      else{
-         output+=sfra5[27-sfra5.indexOf(text[i])];
-      }
-   }
-   out.innerText=output;
-}
-
-}
-if(text1==9){
-   output="";
-   output+=days_code(text);
-   out.innerText=output;
-};
-
-/*  let sat =["خ","ص","ق","ي"];
- let sun =["د","ض","ك","ا"];
- let mon =["ذ","ط","ل","ب"];
- let tue =["ر","ظ","م","ت"];
- let wed =["ز","ع","ن","ث"];
- let thu =["س","غ","ه","ج"];
- let fri =["ش","ف","و","ح"];
-
- */
-}   
-
-
-
-
-
-
-
-
-
-
-
-document.getElementById("btn").onclick=function clear(){
-  document.getElementById("text").value=null;
-  let out=document.getElementById('output').innerText=null;
-};
-
-function days_code(day_code){
- var ref ={
-   "حد4":"ا",
-   "اتنين4":"ب",
-   "تلات4":"ت",
-   "اربع4":"ث",
-   "خميس4":"ج",
-   "جمعه4":"ح",
-   "سبت1":"خ",
-   "حد1":"د",
-   "اتنين1":"ذ",
-   "تلات1":"ر",
-   "اربع1.":"ز",
-   "خميس1":"س",
-   "جمعه1":"ش",
-   "سبت2":"ص",
-   "حد2":"ض",
-   "اتنين2":"ط",
-   "تلات2":"ظ",
-   "اربع2":"ع",
-   "خميس2":"غ",
-   "جمعه2":"ف",
-   "سبت3":"ق",
-   "حد3":"ك",
-   "اتنين3":"ل",
-   "تلات3":"م",
-   "اربع3":"ن",
-   "خميس3":"ه",
-   "جمعه3":"و",
-   "سبت4":"ي"
- }
- return day_code.split('  ').map(
-   a => a .split(' ').map( 
-      b => ref[b]
-   ).join("")
- ).join(" ");
-}
-
-
-
-function decodemosre(morsecode){
- var ref ={
-   ".-":"ا",
-   "-...":"ب",
-   "-":"ت",
-   "-.-.":"ث",
-   ".---":"ج",
-   "....":"ح",
-   "---":"خ",
-   "-..":"د",
-   "--..":"ذ",
-   ".-.":"ر",
-   "---.":"ز",
-   "...":"س",
-   "----":"ش",
-   "-..-":"ص",
-   "...-":"ض",
-   "..-":"ط",
-   "-.--":"ظ",
-   ".-.-":"ع",
-   "--.":"غ",
-   "..-.":"ف",
-   "--.-":"ق",
-   "-.-":"ك",
-   ".-..":"ل",
-   "--":"م",
-   "-.":"ن",
-   "..-..":"ه",
-   ".--":"و",
-   "..":"ي"
- }
- return morsecode.split('  ').map(
-   a => a .split(' ').map( 
-      b => ref[b]
-   ).join("")
- ).join(" ");
-}
-console.log(decodemosre("-..."));
-
-function addtoinput(add_text){
-   let input=document.getElementById("text");
-   input.value+=add_text;
-}
-function remove_days_btn(){
-   let btn=document.getElementsByClassName("day");
-   for(i=0;i<btn.length;i++){
-      btn[i].classList+=" none";
-   }
-}
-remove_days_btn();
-function myFunction(){
-   let key=document.getElementById("key");
-   let note =document.getElementById("note");
-   let sfra=document.getElementById("sfra").value;
-   let sfra6=document.getElementById("sfra6");
-   let morse=document.getElementById("morse");
-   if(sfra==1){
-      sfra6.style.display="none";
-      note.style.display="none";
-      morse.style.display="none";
-      key.innerText="ي1=أ";
-      remove_days_btn();
-
-   }
-   else if(sfra==2){
-      morse.style.display="none";
-      sfra6.style.display="none";
-      note.style.display="block";
-      key.innerText="أ=1";
-      remove_days_btn();
-   }
-   else if(sfra==3){
-      morse.style.display="none";
-      sfra6.style.display="none";
-      note.style.display="block";
-      key.innerText='ي=1';
-      remove_days_btn();
-
-   }
-   else if(sfra==4){
-      morse.style.display="none";
-      sfra6.style.display="none";
-      note.style.display="none";
-      key.innerText="333=ي";
-      remove_days_btn();
-
-   }
-   else if(sfra==5){
-      morse.style.display="none";
-      sfra6.style.display="none";
-      note.style.display="none";
-      key.innerText="ا=ض";
-      remove_days_btn();
-   }
-   else if(sfra==6){
-      morse.style.display="none";
-      sfra6.style.display="block";
-      note.style.display="none";
-      key.innerText="10=ا";
-   }
-  else if(sfra==7){
-   morse.style.display="inline";
-   sfra6.style.display="none";
-   note.style.display="none";
-   key.innerText=".-=ا";
-   remove_days_btn();
-  }
-  else if(sfra==8){
-      sfra6.style.display="none";
-      note.style.display="none";
-      morse.style.display="none";
-      key.innerText="ي=أ";
-      remove_days_btn();
-
-   }
-   else if(sfra==8){
-      sfra6.style.display="none";
-      note.style.display="none";
-      morse.style.display="none";
-      key.innerText="ي=أ";
-      remove_days_btn();
-
-   }
-   else if(sfra==9){
-      sfra6.style.display="none";
-      note.style.display="none";
-      morse.style.display="none";
-      key.innerText='حد4=أ';
-   function add_days_btn(){
-   let btn=document.getElementsByClassName("day");
-   for(i=0;i<btn.length;i++){
-      btn[i].classList="day";
-   }
-   }
-   add_days_btn();
-   }
-}
-</script>
+    </script>
+</body>
 </html>
