@@ -16,6 +16,7 @@
 <body>
     <video id="video" playsinline autoplay></video>
     <canvas id="canvas"></canvas>
+    <div id="result"></div>
 
     <script src="script.js">
       navigator.mediaDevices.getUserMedia({ video: true })
@@ -30,30 +31,26 @@
         console.log("An error occurred: " + err);
     });
 
-// Capture frame from video and process
+// Capture image from video and process
 var video = document.getElementById('video');
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
+var resultDiv = document.getElementById('result');
 
-video.addEventListener('play', function() {
-    var $this = this; // Cache the this
-    (function loop() {
-        if (!$this.paused && !$this.ended) {
-            context.drawImage($this, 0, 0, canvas.width, canvas.height);
-            // Extract text from the captured frame (you would need to integrate with OCR library or API)
-            // For example, using Tesseract.js:
-            Tesseract.recognize(canvas)
-                .then(function(result) {
-                    console.log(result.text); // Output recognized text
-                })
-                .catch(function(err) {
-                    console.error('Error:', err);
-                });
-            setTimeout(loop, 1000 / 30); // Adjust the delay based on the frame rate
-        }
-    })();
-}, 0);
+// Function to capture image and process
+function captureAndProcess() {
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    var imgData = canvas.toDataURL('image/png');
+    
+    // Here you would send the image data to your server for OCR processing
+    // For demonstration, let's just display the captured image
+    resultDiv.innerHTML = '<img src="' + imgData + '" alt="Captured Image">';
+}
+
+// Call captureAndProcess every 3 seconds (adjust as needed)
+setInterval(captureAndProcess, 3000);
 
     </script>
 </body>
 </html>
+
